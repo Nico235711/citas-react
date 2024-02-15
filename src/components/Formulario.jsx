@@ -1,4 +1,78 @@
-const Formulario = () => {
+import { useState, useEffect } from "react"
+import Error from "./Error"
+
+const Formulario = ({ 
+  pacientes, 
+  setPacientes, 
+  paciente, 
+  setPaciente 
+}) => {
+
+  const [mascota, setMascota] = useState("")
+  const [propietario, setPropietario] = useState("")
+  const [email, setEmail] = useState("")
+  const [alta, setAlta] = useState("")
+  const [sintomas, setSintomas] = useState("")
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    if (Object.keys(paciente).length > 0) {
+      setMascota(paciente.mascota)
+      setPropietario(paciente.propietario)
+      setEmail(paciente.email)
+      setAlta(paciente.alta)
+      setSintomas(paciente.sintomas)
+    }
+  }, [paciente])
+  
+
+  const generarId = () => {
+    const random = Math.random().toString(36).substring(2)
+    const fecha = Date.now().toString(36)
+    return random + fecha
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+
+    if ([mascota, propietario, email, alta, sintomas].includes("")) {
+      setError(true)
+      return
+    }
+
+    setError(false)
+
+    // objeto paciente
+    const objPaciente = {
+      mascota,
+      propietario,
+      email,
+      alta,
+      sintomas,
+    }
+
+    if (paciente.id) {
+      // editando
+      objPaciente.id = paciente.id
+      const pacientesActualizados = pacientes.map(pacienteState => 
+        pacienteState.id === paciente.id ? objPaciente : pacienteState 
+      )
+      setPacientes(pacientesActualizados)
+      setPaciente({})
+    }
+    else {
+      // nuevo registro
+      objPaciente.id = generarId() // creo una propiedad en el objeto
+      setPacientes([...pacientes, objPaciente])
+    }
+
+    // reinicar el formulario
+    setMascota("")
+    setPropietario("")
+    setEmail("")
+    setAlta("")
+    setSintomas("")
+  }
 
   return (
 
@@ -11,7 +85,14 @@ const Formulario = () => {
         <span className="text-indigo-600">Adiministralos</span>
       </p>
 
-      <form className="bg-white shadow-md p-5 rounded-md my-10">
+      <form 
+        className="bg-white shadow-md p-5 rounded-md m-3" 
+        onSubmit={handleSubmit}
+      >
+        {
+          error && <Error>Todos los campos son obligatorios</Error>
+        }
+
         <div className="mb-5">
           <label 
             htmlFor="mascota"
@@ -22,9 +103,12 @@ const Formulario = () => {
             name="mascota" 
             id="mascota" 
             placeholder="Nombre de la mascota" 
-            className="border-2 p-2 w-full mt-2 rounded-md focus:outline-none placeholder-gray-400"
+            className="border-2 p-2 w-full mt-2 rounded-md focus:outline-none placeholder-gray-400" 
+            value={mascota}
+            onChange={ e => setMascota(e.target.value)}
           />
         </div>
+
         <div className="mb-5">
           <label 
             htmlFor="propietario"
@@ -35,9 +119,12 @@ const Formulario = () => {
             name="propietario" 
             id="propietario" 
             placeholder="Nombre del dueño" 
-            className="border-2 p-2 w-full mt-2 rounded-md focus:outline-none placeholder-gray-400"
+            className="border-2 p-2 w-full mt-2 rounded-md focus:outline-none placeholder-gray-400" 
+            value={propietario}
+            onChange={ e => setPropietario(e.target.value)}
           />
         </div>
+
         <div className="mb-5">
           <label 
             htmlFor="email"
@@ -48,9 +135,12 @@ const Formulario = () => {
             name="email" 
             id="email" 
             placeholder="E-mail de contacto" 
-            className="border-2 p-2 w-full mt-2 rounded-md focus:outline-none placeholder-gray-400"
+            className="border-2 p-2 w-full mt-2 rounded-md focus:outline-none placeholder-gray-400" 
+            value={email}
+            onChange={ e => setEmail(e.target.value)}
           />
         </div>
+
         <div className="mb-5">
           <label 
             htmlFor="alta"
@@ -61,8 +151,11 @@ const Formulario = () => {
             name="alta" 
             id="alta" 
             className="border-2 p-2 w-full mt-2 rounded-md"
+            value={alta}
+            onChange={ e => setAlta(e.target.value)}
           />
-        </div>
+        </div> 
+        
         <div className="mb-5">
           <label 
             htmlFor="sintomas"
@@ -72,15 +165,18 @@ const Formulario = () => {
             name="sintomas" 
             id="sintomas" 
             className="border-2 p-2 w-full mt-2 rounded-md focus:outline-none placeholder-gray-400 h-44 resize-none"
-            placeholder="¿Qué síntomas presenta el paciente?"
+            placeholder="¿Qué síntomas presenta el paciente?" 
+            value={sintomas}
+            onChange={ e => setSintomas(e.target.value)}
           ></textarea>
         </div>
 
         <input 
-          type="sumbit" 
-          value="Agregar Paciente" 
+          type="submit" 
           className="bg-indigo-600 text-center w-full p-1 hover:bg-indigo-700 transition-all text-white text-2xl font-medium cursor-pointer rounded-md uppercase"
+          value={paciente.id ? "Guardar Cambios" : "Agregar Paciente"}
         />
+          
       </form>
 
     </div>
