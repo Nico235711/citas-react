@@ -4,6 +4,10 @@ import Header from "./components/Header"
 import ListadoPacientes from "./components/ListadoPacientes"
 
 function App() {
+  /* 
+    obtengo los pacientes del local storage y no hay nada devuelve un arreglo
+    vacio
+  */
   const pacienteLS = JSON.parse(localStorage.getItem("pacientes")) ?? []
 
   const [pacientes, setPacientes] = useState(pacienteLS)
@@ -13,6 +17,9 @@ function App() {
     localStorage.setItem("pacientes", JSON.stringify(pacientes))
   }, [pacientes]);
 
+  /* 
+    elimina un usuario por el id
+  */
   const eliminarPaciente = id => {
     // console.log(id);
     const respuesta = confirm("¿Desea elimina al paciente?")

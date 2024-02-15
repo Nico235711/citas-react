@@ -10,6 +10,7 @@ const ListadoPacientes = ({
 
     <div className="md:w-1/2 lg:w-3/5 overflow-y-scroll  md:h-screen">
       {
+        // ternario para mostrar el titulo
         pacientes.length ? (
           <>
             <h1 className="text-3xl font-extrabold text-center">
@@ -36,7 +37,7 @@ const ListadoPacientes = ({
       {
         pacientes.map(paciente => (
           <Paciente
-            key={paciente.id}
+            key={paciente.id} // cuando itero siempre necesito un id único
             paciente={paciente}
             setPaciente={setPaciente}
             eliminarPaciente={eliminarPaciente}

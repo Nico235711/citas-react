@@ -8,6 +8,7 @@ const Formulario = ({
   setPaciente 
 }) => {
 
+  // estados para los input
   const [mascota, setMascota] = useState("")
   const [propietario, setPropietario] = useState("")
   const [email, setEmail] = useState("")
@@ -25,13 +26,14 @@ const Formulario = ({
     }
   }, [paciente])
   
-
+  // genero un id único
   const generarId = () => {
     const random = Math.random().toString(36).substring(2)
     const fecha = Date.now().toString(36)
     return random + fecha
   }
 
+  // validacion
   const handleSubmit = e => {
     e.preventDefault()
 
@@ -52,7 +54,7 @@ const Formulario = ({
     }
 
     if (paciente.id) {
-      // editando
+      // edito al paciente
       objPaciente.id = paciente.id
       const pacientesActualizados = pacientes.map(pacienteState => 
         pacienteState.id === paciente.id ? objPaciente : pacienteState 
@@ -61,12 +63,12 @@ const Formulario = ({
       setPaciente({})
     }
     else {
-      // nuevo registro
+      // agrego un paciente nuevo
       objPaciente.id = generarId() // creo una propiedad en el objeto
       setPacientes([...pacientes, objPaciente])
     }
 
-    // reinicar el formulario
+    // reinicio el formulario cada vez que se agrega un paciente nuevo
     setMascota("")
     setPropietario("")
     setEmail("")
@@ -90,6 +92,9 @@ const Formulario = ({
         onSubmit={handleSubmit}
       >
         {
+          /* 
+            si hay algun campo vacio muestra el componente de Error
+          */
           error && <Error>Todos los campos son obligatorios</Error>
         }
 
